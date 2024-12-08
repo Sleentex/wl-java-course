@@ -26,7 +26,7 @@ public class Main {
         // Register a user
         UserRegistrationDto registrationDto = new UserRegistrationDto();
         registrationDto.setEmail("test123@example.com");
-//        registrationDto.setPhoneNumber("+1234567890");
+        registrationDto.setPhoneNumber("+1234567890");
         registrationDto.setPassword("password");
         registrationDto.setRepeatPassword("password");
 
