@@ -18,55 +18,47 @@ class UserValidatorTest {
 
     @Test
     void shouldPassValidationForValidInput() {
-        // Arrange
         UserRegistrationDto dto = new UserRegistrationDto();
         dto.setEmail("validuser@example.com");
         dto.setPhoneNumber("+1234567890");
         dto.setPassword("password");
         dto.setRepeatPassword("password");
 
-        // Act & Assert
         assertDoesNotThrow(() -> userValidator.validate(dto));
     }
 
     @Test
     void shouldFailValidationForInvalidEmail() {
-        // Arrange
         UserRegistrationDto dto = new UserRegistrationDto();
         dto.setEmail("invalid-email");
         dto.setPhoneNumber("+1234567890");
         dto.setPassword("password");
         dto.setRepeatPassword("password");
 
-        // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> userValidator.validate(dto));
         assertEquals("Invalid email format.", exception.getMessage());
     }
 
     @Test
     void shouldFailValidationWhenPasswordsDoNotMatch() {
-        // Arrange
         UserRegistrationDto dto = new UserRegistrationDto();
         dto.setEmail("user@example.com");
         dto.setPhoneNumber("+1234567890");
         dto.setPassword("password");
         dto.setRepeatPassword("differentpassword");
 
-        // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> userValidator.validate(dto));
         assertEquals("Passwords do not match.", exception.getMessage());
     }
 
     @Test
     void shouldFailValidationForMissingRequiredFields() {
-        // Arrange
         UserRegistrationDto dto = new UserRegistrationDto();
-        dto.setEmail(null); // Missing email
+        dto.setEmail(null);
         dto.setPhoneNumber("+1234567890");
         dto.setPassword("password");
         dto.setRepeatPassword("password");
 
-        // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> userValidator.validate(dto));
         assertEquals("Email is required.", exception.getMessage());
     }

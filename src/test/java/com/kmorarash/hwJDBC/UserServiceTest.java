@@ -30,7 +30,6 @@ class UserServiceTest {
 
     @Test
     void shouldRegisterUserSuccessfully() {
-        // Arrange
         UserRegistrationDto dto = new UserRegistrationDto();
         dto.setEmail("newuser@example.com");
         dto.setPhoneNumber("+1234567890");
@@ -46,10 +45,8 @@ class UserServiceTest {
         when(userRepository.existsByEmail(dto.getEmail())).thenReturn(false);
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
-        // Act
         var response = userService.registerUser(dto);
 
-        // Assert
         assertNotNull(response);
         assertEquals(1L, response.id());
         assertEquals("newuser@example.com", response.email());
@@ -62,7 +59,6 @@ class UserServiceTest {
 
     @Test
     void shouldThrowExceptionWhenEmailAlreadyExists() {
-        // Arrange
         UserRegistrationDto dto = new UserRegistrationDto();
         dto.setEmail("existinguser@example.com");
         dto.setPhoneNumber("+1234567890");
@@ -71,7 +67,6 @@ class UserServiceTest {
 
         when(userRepository.existsByEmail(dto.getEmail())).thenReturn(true);
 
-        // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> userService.registerUser(dto));
         assertEquals("Email is already registered.", exception.getMessage());
 
@@ -82,7 +77,6 @@ class UserServiceTest {
 
     @Test
     void shouldThrowExceptionOnValidationFailure() {
-        // Arrange
         UserRegistrationDto dto = new UserRegistrationDto();
         dto.setEmail("invalid-email");
         dto.setPhoneNumber("+1234567890");
@@ -93,7 +87,6 @@ class UserServiceTest {
                 .when(userValidator)
                 .validate(dto);
 
-        // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> userService.registerUser(dto));
         assertEquals("Invalid email format", exception.getMessage());
 
@@ -104,7 +97,6 @@ class UserServiceTest {
 
     @Test
     void shouldGetUserByIdSuccessfully() {
-        // Arrange
         Long userId = 1L;
         User user = new User();
         user.setId(userId);
@@ -114,10 +106,8 @@ class UserServiceTest {
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        // Act
         UserResponseDto response = userService.getUserById(userId);
 
-        // Assert
         assertNotNull(response);
         assertEquals(userId, response.id());
         assertEquals("user@example.com", response.email());
@@ -128,11 +118,9 @@ class UserServiceTest {
 
     @Test
     void shouldThrowExceptionWhenUserNotFound() {
-        // Arrange
         Long userId = 99L;
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> userService.getUserById(userId));
         assertEquals("User not found", exception.getMessage());
 
