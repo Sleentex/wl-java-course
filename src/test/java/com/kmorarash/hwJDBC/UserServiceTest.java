@@ -1,6 +1,7 @@
 package com.kmorarash.hwJDBC;
 
 import com.kmorarash.hwJDBC.dto.UserRegistrationDto;
+import com.kmorarash.hwJDBC.dto.UserResponseDto;
 import com.kmorarash.hwJDBC.model.User;
 import com.kmorarash.hwJDBC.service.UserService;
 import com.kmorarash.hwJDBC.service.UserServiceImpl;
@@ -10,6 +11,7 @@ import org.mockito.Mockito;
 import com.kmorarash.hwJDBC.repository.UserRepository;
 import com.kmorarash.hwJDBC.validator.UserValidator;
 
+import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -98,6 +100,43 @@ class UserServiceTest {
         verify(userValidator, times(1)).validate(dto);
         verify(userRepository, never()).existsByEmail(anyString());
         verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void shouldGetUserByIdSuccessfully() {
+        // Arrange
+        Long userId = 1L;
+        User user = new User();
+        user.setId(userId);
+        user.setEmail("user@example.com");
+        user.setPhoneNumber("+1234567890");
+        user.setPassword("password");
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        // Act
+        UserResponseDto response = userService.getUserById(userId);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(userId, response.id());
+        assertEquals("user@example.com", response.email());
+        assertEquals("+1234567890", response.phoneNumber());
+
+        verify(userRepository, times(1)).findById(userId);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUserNotFound() {
+        // Arrange
+        Long userId = 99L;
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> userService.getUserById(userId));
+        assertEquals("User not found", exception.getMessage());
+
+        verify(userRepository, times(1)).findById(userId);
     }
 }
 
