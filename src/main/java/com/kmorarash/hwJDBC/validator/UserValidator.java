@@ -13,7 +13,8 @@ public class UserValidator {
         if (userRegistrationDto.getEmail() == null || userRegistrationDto.getEmail().isEmpty()) {
             throw new RuntimeException("Email is required.");
         }
-        if (!userRegistrationDto.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+
+        if (!EMAIL_PATTERN.matcher(userRegistrationDto.getEmail()).matches()) {
             throw new RuntimeException("Invalid email format.");
         }
         if (userRegistrationDto.getPassword() == null || userRegistrationDto.getRepeatPassword() == null) {
