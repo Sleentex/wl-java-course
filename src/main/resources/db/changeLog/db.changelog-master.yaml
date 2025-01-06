@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - include:
+      file: /db/changelog/changes/create-users-table.sql
+  - include:
+      file: /db/changelog/changes/insert-users-table.sql
+  - include:
+      file: /db/changelog/changes/create-roles-table.sql
+  - include:
+      file: /db/changelog/changes/insert-roles-table.sql
+  - include:
+      file: /db/changelog/changes/create-user-role-pivot-table.sql
+  - include:
+      file: /db/changelog/changes/insert-user-role-pivot-table.sql
